@@ -739,3 +739,8 @@ html:not(.no-promo) .has-promo section[id]{scroll-margin-top:calc(var(--hd) + 46
 .auth{display:inline-flex;align-items:center;gap:10px;margin:0 0 18px;padding:8px 16px 8px 10px;border-radius:999px;background:rgba(107,15,26,.06);border:1px solid rgba(107,15,26,.3);color:var(--wine);font-size:13.5px;font-weight:700;line-height:1.3}
 .auth svg{flex:none;color:var(--wine)}
 @media (max-width:760px){.auth{font-size:12.5px;padding:7px 14px 7px 9px}}
+.auth:has(.auth-lg){padding:5px 16px 5px 5px}
+.auth-lg{flex:none;display:grid;place-items:center;height:28px;padding:0 11px;border-radius:999px;background:#fff;box-shadow:0 0 0 1px rgba(107,15,26,.12)}
+.auth-lg img{display:block;width:auto;height:15px}
+@media (max-width:760px){.auth:has(.auth-lg){padding:5px 14px 5px 5px}.auth-lg{height:26px;padding:0 9px}.auth-lg img{height:13px}}
+@media (max-width:960px){.mh-5 .mh-c>.auth,.mh-b .mh-c>.auth{order:1;align-self:flex-start}}

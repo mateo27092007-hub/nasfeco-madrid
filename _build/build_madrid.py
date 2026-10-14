@@ -14,7 +14,7 @@ import os, re, json, shutil, urllib.parse
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HERE = os.path.dirname(os.path.abspath(__file__))
 SITE = "https://nasfeco.es"      # PENDIENTE: confirmar dominio
-VER = "54"
+VER = "55"
 INDEX = False                    # False = noindex en todas las páginas hasta que NASFECO autorice el lanzamiento
 WA_NUM = ""                      # PENDIENTE: WhatsApp de España, solo dígitos (ej. 34600000000)
 WA_SHOW = ""                     # PENDIENTE: como se muestra (ej. +34 600 00 00 00)
@@ -106,7 +106,8 @@ def em(t): return t.replace("[", "<em>").replace("]", "</em>")
 # Distribuidor oficial (pedido del cliente 13/10/2026). Tener a mano la autorización escrita de Waterdrop Filter.
 I_SHIELD = "M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6zM8.5 12l2.5 2.5 4.5-5"
 AUTH = lambda: L("Official authorized distributor of Waterdrop Filter", "Distribuidor oficial autorizado de Waterdrop Filter")
-def auth_badge(): return f'<p class="auth">{ico(I_SHIELD, 18, 1.7)}<span>{AUTH()}</span></p>'
+# logo oficial (waterdropfilter.com, recortado sin el lema) en una pastilla blanca
+def auth_badge(): return f'<p class="auth"><b class="auth-lg"><img src="{a("assets/brand/waterdrop-filter-logo.png")}" alt="Waterdrop Filter" width="280" height="54"></b><span>{AUTH()}</span></p>'
 def eyebrow(text, light=False): return f'<p class="eb{" lt" if light else ""}"><i></i>{text}</p>'
 def btn(text, attrs="", cls="b-wine", href=None, icon=I_ARR):
     inner = f'<span>{text}</span><i>{ico(icon, 15, 1.8)}</i>'
