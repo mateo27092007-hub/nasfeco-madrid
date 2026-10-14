@@ -1,0 +1,18 @@
+# No se suben: copias de Miami, prototipos, herramientas locales y los vídeos grandes que la web no usa
+_archivo/
+prototipos/
+node_modules/
+.wrangler/
+__pycache__/
+# originales del cliente (la web usa las versiones preparadas en assets/)
+Gemini_Generated_Image_*.jpg
+WhatsApp Image *.jpeg
+# notas internas
+PROMPT-ESPANA.md
+# vídeos del X12 que no usa la web (13 MB y 6 MB)
+assets/x12/x12-film.mp4
+assets/x12/x12-film-mo.mp4
+assets/x12/x12-film-poster.jpg
+assets/x12/x12-film-mo-poster.jpg
+# generador de la web de Miami (no es parte de esta web)
+_build/build_miami.py

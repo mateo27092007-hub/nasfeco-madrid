@@ -1,0 +1,15 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // Proyecto NUEVO de España. Nunca publicar encima de "nasfeco-miami".
+  "name": "nasfeco-madrid",
+  "compatibility_date": "2026-10-01",
+  "workers_dev": true,
+  "assets": {
+    "directory": "."
+  },
+  // PENDIENTE: confirmar el dominio de España antes de publicar
+  "routes": [
+    { "pattern": "nasfeco.es", "custom_domain": true },
+    { "pattern": "www.nasfeco.es", "custom_domain": true }
+  ]
+}
