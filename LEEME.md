@@ -11,7 +11,12 @@ Tiene identidad propia de España. La web de Miami (`Escritorio\Miami Web`) y `P
 - **Estructura propia: una guía de preguntas.** Portada con el comprobador "¿Llegamos a tu casa?" y un índice. Luego, 8 capítulos, cada uno con su pregunta y una "respuesta corta":
   01 ¿Qué me vendéis exactamente? (X12) · 02 ¿Por qué comprarlo con NASFECO? (4 pilares + tabla "por tu cuenta / con NASFECO") · 03 ¿Qué me llevo además del equipo? (kit) · 04 ¿Cómo son el diagnóstico y la instalación? · 05 ¿Quién viene a casa? · 06 ¿Cabe en mi cocina? · 07 ¿Cuánto cuesta? · 08 ¿Alguna otra duda?
   En pantallas anchas, un índice lateral marca el capítulo que se está leyendo. Capítulos: `CHAPTERS()`; pilares: `PILLARS()` en el generador.- Página del X12: portada con 3D y precio · kit en 3D (justo después) · fotos · lo que hace · short · ¿cabe? · ficha · equipo · preguntas.
-## Ver la página (sin publicar)
+## Vista previa en GitHub Pages (para enseñarla)
+- Enlace: https://mateo27092007-hub.github.io/nasfeco-madrid/ · repositorio público: https://github.com/mateo27092007-hub/nasfeco-madrid
+- Es solo una vista previa (con `noindex`); el lanzamiento real será en Cloudflare con el dominio de España.
+- Para actualizarla después de un cambio: `python _build/build_madrid.py`, luego `git add -A`, `git commit -m "..."` y `git push`. Tarda 1 o 2 minutos en verse.
+
+## Ver la página en local
 Doble clic en `ABRIR-PAGINA.bat`, o `python _build/serve.py` y abrir http://127.0.0.1:8765. Solo se ve en esta computadora.
 
 ## Dónde se cambia cada cosa
