@@ -67,7 +67,7 @@
     $$('[data-scene]').forEach(i => i.classList.toggle('on', i.dataset.scene === k));
     $$('.sel[data-model]').forEach(b => { const on = b.dataset.model === k; b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); });
     const ri = $('#ritual-img'); if (ri) ri.src = M[k].scene;
-    const rt = $('#ritual-tag'); if (rt) rt.textContent = `Waterdrop ${M[k].name} · ${T('Ambientación ilustrativa', 'Illustrative setting')}`;
+    const rt = $('#ritual-tag'); if (rt) rt.textContent = `Waterdrop Filter ${M[k].name} · ${T('Ambientación ilustrativa', 'Illustrative setting')}`;
   }
   $$('.sel[data-model]').forEach(b => b.addEventListener('click', () => selectModel(b.dataset.model)));
 
@@ -123,8 +123,8 @@
   /* ---------- the smart faucet (hotspot and ritual) ---------- */
   function faucetInfo() {
     const m = M[state.model], f = state.faucet[state.model];
-    $('#in-body').innerHTML = `<div class="dt"><div class="dt-img${state.model === 'x16' ? ' dark' : ''}"><img src="${m.faucets[f]}" alt="Waterdrop ${m.name}"></div><div>
-      <p class="kick">Waterdrop ${m.name}</p><h2 id="in-title">${T('El grifo <em>inteligente.</em>', 'The smart <em>faucet.</em>')}</h2>
+    $('#in-body').innerHTML = `<div class="dt"><div class="dt-img${state.model === 'x16' ? ' dark' : ''}"><img src="${m.faucets[f]}" alt="Waterdrop Filter ${m.name}"></div><div>
+      <p class="kick">Waterdrop Filter ${m.name}</p><h2 id="in-title">${T('El grifo <em>inteligente.</em>', 'The smart <em>faucet.</em>')}</h2>
       <p>${T('El grifo propio original lleva el control de tu equipo a la encimera, con información digital para el uso diario.', 'The original dedicated faucet brings system controls to your worktop, with digital information for everyday use.')}</p>
       <p>${T('La escena muestra cómo convive con la grifería principal de la cocina. Durante la valoración revisamos su ubicación y la compatibilidad de tu espacio.', 'The scene shows how it sits alongside the main kitchen faucet. During the assessment we review its placement and your kitchen compatibility.')}</p>
       <p class="fine">${T('Ambientación ilustrativa. Consulta la referencia exacta y sus funciones en la ficha oficial.', 'Illustrative setting. Check the exact reference and features in the official specifications.')}</p></div></div>`;
@@ -139,8 +139,8 @@
       ? T('El equilibrio para tu día a día: un sistema de ósmosis inversa sin depósito, con remineralización y grifo inteligente, acompañado por toda la experiencia NASFECO.', 'Everyday balance: a tankless reverse osmosis system with remineralization and a smart faucet, accompanied by the complete NASFECO experience.')
       : T('Capacidad nominal superior y diseño en negro: una opción para quienes priorizan rapidez y presencia, con la misma atención NASFECO.', 'Higher rated capacity and a black finish: an option for those who value speed and presence, with the same NASFECO attention.');
     const feats = [T('Ósmosis inversa sin depósito', 'Tankless reverse osmosis'), T('Remineralización', 'Remineralization'), T('Grifo inteligente original', 'Original smart faucet'), `${m.cap} · ${T('capacidad nominal', 'rated capacity')}`, T('Relación nominal 3:1 purificada / desagüe', 'Rated 3:1 purified / drain ratio')];
-    $('#dt-body').innerHTML = `<div class="dt-img${k === 'x16' ? ' dark' : ''}"><img id="dt-img" src="${m.faucets[f]}" alt="Waterdrop ${m.name}"></div><div>
-      <p class="kick">Waterdrop technology · NASFECO experience</p><h2 id="dt-title">Waterdrop <em>${m.name}</em></h2><p>${desc}</p>
+    $('#dt-body').innerHTML = `<div class="dt-img${k === 'x16' ? ' dark' : ''}"><img id="dt-img" src="${m.faucets[f]}" alt="Waterdrop Filter ${m.name}"></div><div>
+      <p class="kick">Waterdrop Filter technology · NASFECO experience</p><h2 id="dt-title">Waterdrop Filter <em>${m.name}</em></h2><p>${desc}</p>
       <div class="pc-sw">${sw}</div><ul>${feats.map(x => `<li>${x}</li>`).join('')}</ul>
       <div class="pc-price"><b>${now(k)}</b><span>${T('IVA incluido', 'VAT included')}<br>${T('Instalación estándar + kit de bienvenida', 'Standard installation + welcome kit')}</span></div>
       <div class="row"><button type="button" class="btn b-gold" data-book="${k}"><span>${T('Elegir esta experiencia', 'Choose this experience')}</span><i>↗</i></button></div></div>`;
@@ -162,7 +162,7 @@
     $('#qz-form').addEventListener('submit', e => {
       e.preventDefault(); const fd = new FormData(e.target);
       const k = fd.get('p') === 'capacity' ? 'x16' : 'x12', m = M[k], busy = fd.get('r') === 'busy';
-      $('#qz-body').innerHTML = `<div class="qz-r"><p class="kick">${T('Un punto de partida para hablarlo', 'A starting point for our conversation')}</p><h3>Waterdrop ${m.name} · ${now(k)}</h3>
+      $('#qz-body').innerHTML = `<div class="qz-r"><p class="kick">${T('Un punto de partida para hablarlo', 'A starting point for our conversation')}</p><h3>Waterdrop Filter ${m.name} · ${now(k)}</h3>
         <p>${k === 'x16' ? T('Como priorizas la mayor capacidad, el X16 es una opción para explorar, con toda la experiencia NASFECO.', 'Since you prioritize higher capacity, X16 is an option to explore, with the complete NASFECO experience.')
           : T('El X12 es un buen punto de partida para tu rutina, con toda la experiencia NASFECO.', 'X12 is a good starting point for your routine, with the complete NASFECO experience.') + (busy ? ' ' + T('Como en tu casa hay mucho movimiento, podemos ver juntos si la mayor capacidad del X16 te aporta valor.', 'Since your home is busy, together we can review whether the extra X16 capacity adds value for you.') : '')}</p>
         <p class="fine">${T('Esta recomendación refleja tus preferencias. La compatibilidad y el rendimiento dependen de la valoración de tu cocina; no es un diagnóstico técnico.', 'This guidance reflects your preferences. Compatibility and performance depend on your kitchen assessment; it is not a technical diagnosis.')}</p>
@@ -180,7 +180,7 @@
   const opt = (name, v, label) => `<label><input type="radio" name="${name}" value="${v}"${(B[name] || '') === v ? ' checked' : ''}>${label}</label>`;
   function sideSummary() {
     const k = B.model || state.model, m = M[k], f = m.faucet;
-    $('#bk-img').src = m.faucets[f]; $('#bk-model').textContent = `Waterdrop ${m.name} · ${bName(m.body)} · ${fName(f)}`; $('#bk-price').textContent = now(k);
+    $('#bk-img').src = m.faucets[f]; $('#bk-model').textContent = `Waterdrop Filter ${m.name} · ${bName(m.body)} · ${fName(f)}`; $('#bk-price').textContent = now(k);
   }
   function renderBook() {
     const s = state.step; $('#bk-err').textContent = '';
@@ -195,8 +195,8 @@
     if (s === 0) {
       const k0 = B.model || state.model;
       h = Object.keys(M).map(k => SOON.has(k)
-          ? `<label class="choice soon" aria-disabled="true"><input type="radio" name="model" value="${k}" disabled><span><b>Waterdrop ${M[k].name}</b></span><strong>${T('Próximamente', 'Coming soon')}</strong></label>`
-          : `<label class="choice"><input type="radio" name="model" value="${k}"${k0 === k ? ' checked' : ''}><span><b>Waterdrop ${M[k].name}</b><small>${bName(M[k].body)} · ${fName(M[k].faucet).toLowerCase()}</small></span><strong>${esc(now(k))}</strong></label>`).join('')
+          ? `<label class="choice soon" aria-disabled="true"><input type="radio" name="model" value="${k}" disabled><span><b>Waterdrop Filter ${M[k].name}</b></span><strong>${T('Próximamente', 'Coming soon')}</strong></label>`
+          : `<label class="choice"><input type="radio" name="model" value="${k}"${k0 === k ? ' checked' : ''}><span><b>Waterdrop Filter ${M[k].name}</b><small>${bName(M[k].body)} · ${fName(M[k].faucet).toLowerCase()}</small></span><strong>${esc(now(k))}</strong></label>`).join('')
         + `<p class="fine">${T('El precio incluye IVA, valoración e instalación estándar. Cualquier adaptación adicional se acuerda antes.', 'The price includes VAT, assessment and standard installation. Any additional work is agreed beforehand.')}</p>`;
     } else if (s === 1) {
       h = `<div class="f2"><div class="fld" data-f="zip"><label for="f-zip">${T('Código postal (Madrid)', 'Postcode (Madrid)')}</label><input id="f-zip" name="zip" inputmode="numeric" maxlength="5" autocomplete="postal-code" value="${val('zip')}" placeholder="28001"><span class="msg"></span></div>
@@ -232,7 +232,7 @@
   const lab = { flat: T('Piso', 'Flat'), house: T('Casa / chalé', 'House'), other: T('Otro', 'Other'), yes: T('Sí', 'Yes'), no: 'No', unsure: T('No lo sé', 'Not sure'), morning: T('Mañana', 'Morning'), afternoon: T('Tarde', 'Afternoon'), any: T('Cualquiera', 'Any time') };
   function summary() {
     const m = M[B.model];
-    return [[T('Equipo', 'Experience'), `Waterdrop ${m.name} · ${bName(B.body)} · ${fName(B.faucet)} · ${priceTxt(B.model)} (${T('IVA, valoración, instalación estándar y kit incluidos', 'VAT, assessment, standard installation and kit included')})`],
+    return [[T('Equipo', 'Experience'), `Waterdrop Filter ${m.name} · ${bName(B.body)} · ${fName(B.faucet)} · ${priceTxt(B.model)} (${T('IVA, valoración, instalación estándar y kit incluidos', 'VAT, assessment, standard installation and kit included')})`],
       [T('Código postal', 'Postcode'), B.zip], [T('Vivienda', 'Home'), lab[B.home]], [T('Enchufe bajo el fregadero', 'Socket under the sink'), lab[B.outlet]],
       [T('Nombre', 'Name'), B.name], [T('Correo electrónico', 'Email'), B.email], [T('Móvil', 'Mobile'), B.phone || '—'],
       [T('Fecha preferida', 'Preferred date'), dmy(B.date)], [T('Franja', 'Time of day'), lab[B.slot] || '—'],

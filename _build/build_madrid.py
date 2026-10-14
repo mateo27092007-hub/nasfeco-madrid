@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""NASFECO España · Madrid — Waterdrop X12 (y X16 en "Próximamente"), en español de España (principal) e inglés.
+"""NASFECO España · Madrid — Waterdrop Filter X12 (y X16 en "Próximamente"), en español de España (principal) e inglés.
 
 Web propia de España: colores del logo (crema, granate y dorado), titulares en serif (Fraunces), arcos madrileños.
 La web de Miami solo sirvió de guía (PROMPT-ESPANA.md); el diseño y la estructura son distintos.
@@ -14,7 +14,7 @@ import os, re, json, shutil, urllib.parse
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HERE = os.path.dirname(os.path.abspath(__file__))
 SITE = "https://nasfeco.es"      # PENDIENTE: confirmar dominio
-VER = "53"
+VER = "54"
 INDEX = False                    # False = noindex en todas las páginas hasta que NASFECO autorice el lanzamiento
 WA_NUM = ""                      # PENDIENTE: WhatsApp de España, solo dígitos (ej. 34600000000)
 WA_SHOW = ""                     # PENDIENTE: como se muestra (ej. +34 600 00 00 00)
@@ -31,7 +31,7 @@ def pend(s): return f'<mark class="pend">[PENDIENTE: {s}]</mark>'
 def fill(t, html=True): return P_RE.sub((lambda m: pend(m.group(1))) if html else (lambda m: f"[PENDIENTE: {m.group(1)}]"), t)
 def val(v, what, html=True): return v if v else (pend(what) if html else f"[PENDIENTE: {what}]")
 
-# ------------------------------------------------------------------ modelos (ficha europea de Waterdrop, waterdropfilter.eu/es, consultada 13/10/2026)
+# ------------------------------------------------------------------ modelos (ficha europea de Waterdrop Filter, waterdropfilter.eu/es, consultada 13/10/2026)
 # price: precio normal en euros, IVA e instalación incluidos (cliente, 13/10/2026: X12 2.539 €, con la oferta 2.239 €). liters: capacidad oficial en L/día (la ficha europea solo da 1200 GPD → PENDIENTE).
 MODELS = {
     "x12": {"name": "X12", "price": 2539, "liters": None, "gpd": 1200, "faucets": [("silver", "assets/products/x12-silver.webp")]},
@@ -103,6 +103,10 @@ I_CHECK = "M5 12l5 5 9-10"; I_PIN = "M12 21s-7-6.2-7-11a7 7 0 0114 0c0 4.8-7 11-
 WA = f'<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="{WA_PATH}"/></svg>'
 ROMAN = [f"{i:02d}" for i in range(1, 13)]   # numeración 01, 02… (sin números romanos)
 def em(t): return t.replace("[", "<em>").replace("]", "</em>")
+# Distribuidor oficial (pedido del cliente 13/10/2026). Tener a mano la autorización escrita de Waterdrop Filter.
+I_SHIELD = "M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6zM8.5 12l2.5 2.5 4.5-5"
+AUTH = lambda: L("Official authorized distributor of Waterdrop Filter", "Distribuidor oficial autorizado de Waterdrop Filter")
+def auth_badge(): return f'<p class="auth">{ico(I_SHIELD, 18, 1.7)}<span>{AUTH()}</span></p>'
 def eyebrow(text, light=False): return f'<p class="eb{" lt" if light else ""}"><i></i>{text}</p>'
 def btn(text, attrs="", cls="b-wine", href=None, icon=I_ARR):
     inner = f'<span>{text}</span><i>{ico(icon, 15, 1.8)}</i>'
@@ -119,8 +123,8 @@ def LIVE(): return [k for k in MODELS if k not in SOON]
 def schema():
     biz = {"@type": "LocalBusiness", "@id": SITE + "/#business", "name": "NASFECO España", "url": SITE + "/",
            "logo": SITE + "/assets/brand/icon-180.png", "image": SITE + "/assets/img/og.jpg",
-           "description": L("Waterdrop X12 tankless reverse osmosis system in Madrid, with kitchen assessment, professional installation, welcome kit and follow-up.",
-                            "Sistema de ósmosis inversa sin depósito Waterdrop X12 en Madrid, con valoración de tu cocina, instalación profesional, kit de bienvenida y seguimiento."),
+           "description": L("Official authorized distributor of Waterdrop Filter. Waterdrop Filter X12 tankless reverse osmosis system in Madrid, with kitchen assessment, professional installation, welcome kit and follow-up.",
+                            "Distribuidor oficial autorizado de Waterdrop Filter. Sistema de ósmosis inversa sin depósito Waterdrop Filter X12 en Madrid, con valoración de tu cocina, instalación profesional, kit de bienvenida y seguimiento."),
            "areaServed": [{"@type": "City", "name": "Madrid"}],
            "address": {"@type": "PostalAddress", "addressLocality": "Madrid", "addressCountry": "ES"},
            "knowsLanguage": ["es", "en"], "currenciesAccepted": "EUR",
@@ -133,13 +137,13 @@ def schema():
         offer = {"@type": "Offer", "url": url_(), "priceCurrency": "EUR", "availability": "https://schema.org/InStock", "areaServed": "Madrid", "seller": {"@id": SITE + "/#business"}}
         if m["price"]: offer["price"] = str(promo_price(CUR) if PROMO_ON else m["price"])
         if m["price"] and PROMO_ON: offer["priceValidUntil"] = PROMO["end"][:10]
-        g.append({"@type": "Product", "name": "Waterdrop " + m["name"], "brand": {"@type": "Brand", "name": "Waterdrop"}, "sku": "WD-" + m["name"],
+        g.append({"@type": "Product", "name": "Waterdrop Filter " + m["name"], "brand": {"@type": "Brand", "name": "Waterdrop Filter"}, "sku": "WD-" + m["name"],
                   "image": [SITE + "/" + fix_photo(CUR)] + [f"{SITE}/assets/products/{CUR}-g{i}.webp" for i in range(1, 5)],
                   "description": L("Tankless reverse osmosis system with remineralization and smart faucet. Price includes VAT, kitchen assessment, standard installation in Madrid and the NASFECO welcome kit.",
                                    "Sistema de ósmosis inversa sin depósito, con remineralización y grifo inteligente. El precio incluye IVA, valoración, instalación estándar en Madrid y el kit de bienvenida NASFECO."),
                   "offers": offer})
         g.append({"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": L("Home", "Inicio"), "item": url_("home")},
-                                                                  {"@type": "ListItem", "position": 2, "name": "Waterdrop " + m["name"], "item": url_()}]})
+                                                                  {"@type": "ListItem", "position": 2, "name": "Waterdrop Filter " + m["name"], "item": url_()}]})
     if CUR == "home" or CUR in MODELS:
         g.append({"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": L(*q), "acceptedAnswer": {"@type": "Answer", "text": fill(L(*x), False)}} for q, x in FAQ()]})
     return {"@context": "https://schema.org", "@graph": g}
@@ -213,7 +217,7 @@ def footer():
     <div><h3 class="ft-h">{L("Contact", "Contacto")}</h3><a href="{wa(hello)}" target="_blank" rel="noopener">WhatsApp {WA_SHOW or pend("WhatsApp +34")}</a>{mail}<p>Madrid · Español · English</p></div>
     <div><h3 class="ft-h">{L("Legal", "Legal")}</h3><a href="{page("legal")}">{L("Legal notice", "Aviso legal")}</a><a href="{page("privacy")}">{L("Privacy", "Privacidad")}</a><a href="{page("cookies")}">{L("Cookies", "Cookies")}</a><a href="{page("terms")}">{L("Terms of sale", "Condiciones de contratación")}</a><button type="button" class="ft-l" data-cookie-settings>{L("Cookie settings", "Configurar cookies")}</button><button type="button" class="ft-l" data-info="scope">{L("Service scope", "Alcance del servicio")}</button></div>
   </div>
-  <div class="wrap ft-b"><span>© 2026 NASFECO España · {L("Waterdrop is a registered trademark of its manufacturer.", "Waterdrop es una marca registrada de su fabricante.")} {L("Complaint forms are available to consumers (Community of Madrid).", "Hay hojas de reclamaciones a disposición de los consumidores (Comunidad de Madrid).")}</span><span><a href="{other()}">{L("Ver en español", "View in English")}</a> · <a href="#top">{L("Back to the top", "Volver arriba")} ↑</a></span></div>
+  <div class="wrap ft-b"><span>© 2026 NASFECO España · {L("Official authorized distributor of Waterdrop Filter.", "Distribuidor oficial autorizado de Waterdrop Filter.")} {L("Waterdrop Filter is a registered trademark of its manufacturer.", "Waterdrop Filter es una marca registrada de su fabricante.")} {L("Complaint forms are available to consumers (Community of Madrid).", "Hay hojas de reclamaciones a disposición de los consumidores (Comunidad de Madrid).")}</span><span><a href="{other()}">{L("Ver en español", "View in English")}</a> · <a href="#top">{L("Back to the top", "Volver arriba")} ↑</a></span></div>
 </footer>'''
 
 def cookie_bar():
@@ -228,7 +232,7 @@ def promo_bar():
     nm = L(*PROMO["name"]); off = money(PROMO["off"])
     return f'''
 <div class="pbar" data-promo data-end="{PROMO["end"]}" role="region" aria-label="{nm}">
-  <div class="wrap pbar-in"><b>{nm}</b><span class="pbar-s">−{off}</span><span class="pbar-l">{L(f"−{off} on your Waterdrop X12: you pay {money(promo_price('x12'))}, VAT and installation included", f"−{off} en tu Waterdrop X12: pagas {money(promo_price('x12'))}, IVA e instalación incluidos")}</span><span class="pbar-t"><span class="pbar-d">{L("Until", "Hasta el")} {promo_end()} · </span>{L("ends in", "termina en")} <i data-cd>…</i></span></div>
+  <div class="wrap pbar-in"><b>{nm}</b><span class="pbar-s">−{off}</span><span class="pbar-l">{L(f"−{off} on your Waterdrop Filter X12: you pay {money(promo_price('x12'))}, VAT and installation included", f"−{off} en tu Waterdrop Filter X12: pagas {money(promo_price('x12'))}, IVA e instalación incluidos")}</span><span class="pbar-t"><span class="pbar-d">{L("Until", "Hasta el")} {promo_end()} · </span>{L("ends in", "termina en")} <i data-cd>…</i></span></div>
 </div>'''
 
 # ------------------------------------------------------------------ inicio: una guía de preguntas (estructura propia de España)
@@ -295,16 +299,17 @@ def hero():
   <div class="wrap mh-g">
     <div class="mh-c">
       {eyebrow("NASFECO España · Madrid")}
+      {auth_badge()}
       <h1 class="d1">{em(L("Reverse osmosis water in your kitchen. [With the full NASFECO service.]", "Agua de ósmosis en tu cocina. [Con todo el servicio NASFECO.]"))}</h1>
-      <p class="lead">{L("We sell you the Waterdrop X12, a tankless reverse osmosis system with a smart faucet. And we hand it to you done: diagnosis, installation, welcome kit and follow-up.", "Te vendemos el Waterdrop X12, un equipo de ósmosis inversa sin depósito con grifo inteligente. Y te lo dejamos todo hecho: diagnóstico, instalación, kit de bienvenida y seguimiento.")}</p>
+      <p class="lead">{L("We sell you the Waterdrop Filter X12, a tankless reverse osmosis system with a smart faucet. And we hand it to you done: diagnosis, installation, welcome kit and follow-up.", "Te vendemos el Waterdrop Filter X12, un equipo de ósmosis inversa sin depósito con grifo inteligente. Y te lo dejamos todo hecho: diagnóstico, instalación, kit de bienvenida y seguimiento.")}</p>
       {zone_form(True)}
       <div class="row">{btn(L("Book your assessment", "Pide tu valoración"), "data-book", "b-wine")}<a class="ul" href="#guia">{L("Start the guide", "Empezar la guía")} ↓</a></div>
     </div>
     <div class="mh-duo">
       <a class="hc hc-buy" href="{page("x12")}">
         <span class="hc-k">{L("What you buy", "Lo que compras")}</span>
-        <span class="arch hc-a"><img src="{a(fix_photo("x12"))}" alt="Waterdrop X12" fetchpriority="high"></span>
-        <b class="hc-t">Waterdrop X12</b>
+        <span class="arch hc-a"><img src="{a(fix_photo("x12"))}" alt="Waterdrop Filter X12" fetchpriority="high"></span>
+        <b class="hc-t">Waterdrop Filter X12</b>
         <ul>{tick(buy)}</ul>
       </a>
       <span class="hc-plus" aria-hidden="true">+</span>
@@ -314,7 +319,7 @@ def hero():
         <b class="hc-t">{L("NASFECO service", "Servicio NASFECO")}</b>
         <ul>{tick(give)}</ul>
       </a>
-      <p class="hc-eq"><b>Waterdrop X12</b> + <b>{L("NASFECO service", "servicio NASFECO")}</b> = {L("one price, VAT and installation included", "un solo precio, IVA e instalación incluidos")}</p>
+      <p class="hc-eq"><b>Waterdrop Filter X12</b> + <b>{L("NASFECO service", "servicio NASFECO")}</b> = {L("one price, VAT and installation included", "un solo precio, IVA e instalación incluidos")}</p>
       <div class="hc-price">{price_html("x12", False)}</div>
     </div>
   </div>
@@ -331,16 +336,16 @@ def systems():
     for k in MODELS:
         m = MODELS[k]
         if k in SOON:
-            ask = wa(L(f"Hello NASFECO! Please let me know when the Waterdrop {m['name']} arrives in Madrid.", f"¡Hola NASFECO! Avisadme cuando llegue el Waterdrop {m['name']} a Madrid."))
+            ask = wa(L(f"Hello NASFECO! Please let me know when the Waterdrop Filter {m['name']} arrives in Madrid.", f"¡Hola NASFECO! Avisadme cuando llegue el Waterdrop Filter {m['name']} a Madrid."))
             cards += f'''
-    <div class="eq-soon rv"><span class="tag">{L("Coming soon", "Próximamente")}</span><b>Waterdrop {m["name"]}</b><span>{L("More capacity, the same service. Coming soon to Madrid.", "Más capacidad, el mismo servicio. Muy pronto en Madrid.")}</span><a class="ul" href="{ask}" target="_blank" rel="noopener">{L("Let me know when it arrives", "Avísame cuando llegue")} {ico(I_ARR, 14, 1.8)}</a></div>'''
+    <div class="eq-soon rv"><span class="tag">{L("Coming soon", "Próximamente")}</span><b>Waterdrop Filter {m["name"]}</b><span>{L("More capacity, the same service. Coming soon to Madrid.", "Más capacidad, el mismo servicio. Muy pronto en Madrid.")}</span><a class="ul" href="{ask}" target="_blank" rel="noopener">{L("Let me know when it arrives", "Avísame cuando llegue")} {ico(I_ARR, 14, 1.8)}</a></div>'''
             continue
         dl = [(L("Capacity", "Capacidad"), cap(k)), (L("Pure / drain", "Pura / desagüe"), "3:1"), (L("Size", "Medidas"), dims_txt()), (L("Faucet", "Grifo"), L("Smart, with TDS and filter alerts", "Inteligente, con TDS y aviso de filtros"))]
         cards += f'''
     <article class="eq-card rv">
-      <a class="arch eq-img" href="{page(k)}" aria-label="{L("See", "Ver")} Waterdrop {m["name"]}"><img src="{a(fix_photo(k))}" alt="Waterdrop {m["name"]}" loading="lazy"></a>
+      <a class="arch eq-img" href="{page(k)}" aria-label="{L("See", "Ver")} Waterdrop Filter {m["name"]}"><img src="{a(fix_photo(k))}" alt="Waterdrop Filter {m["name"]}" loading="lazy"></a>
       <div class="eq-b">
-        <p class="eq-k">Waterdrop · {L("tankless reverse osmosis", "ósmosis inversa sin depósito")}</p>
+        <p class="eq-k">Waterdrop Filter · {L("tankless reverse osmosis", "ósmosis inversa sin depósito")}</p>
         <h3 class="eq-n">{m["name"]}</h3>
         <p class="eq-d">{L("Water passes through its filters and comes out of its own faucet on the worktop, remineralized. No tank: the system stands slim and upright under the sink.", "El agua pasa por sus filtros y sale por su propio grifo en la encimera, remineralizada. Sin depósito: el equipo queda estrecho y de pie bajo el fregadero.")}</p>
         <dl class="eq-dl">{"".join(f"<div><dt>{x}</dt><dd>{y}</dd></div>" for x, y in dl)}</dl>
@@ -350,7 +355,7 @@ def systems():
     return f'''
 <section class="ch eq" id="systems" data-ch>
   <div class="wrap">
-    {ch_head("systems", L("The Waterdrop X12, a tankless reverse osmosis system that gives you purified water from its own faucet. And with it, the full NASFECO service.", "El Waterdrop X12, un equipo de ósmosis inversa sin depósito que te da agua purificada por su propio grifo. Y con él, todo el servicio NASFECO."))}
+    {ch_head("systems", L("The Waterdrop Filter X12, a tankless reverse osmosis system that gives you purified water from its own faucet. And with it, the full NASFECO service.", "El Waterdrop Filter X12, un equipo de ósmosis inversa sin depósito que te da agua purificada por su propio grifo. Y con él, todo el servicio NASFECO."))}
     {cards}
   </div>
 </section>'''
@@ -423,7 +428,7 @@ def kit_photo():
 
 def ch_price():
     k = "x12"; m = MODELS[k]
-    inc = [L("Waterdrop X12 with its original smart faucet", "Waterdrop X12 con su grifo inteligente original"), L("Diagnosis of your kitchen and your water", "Diagnóstico de tu cocina y de tu agua"),
+    inc = [L("Waterdrop Filter X12 with its original smart faucet", "Waterdrop Filter X12 con su grifo inteligente original"), L("Diagnosis of your kitchen and your water", "Diagnóstico de tu cocina y de tu agua"),
            L("Standard professional installation", "Instalación profesional estándar"), L("Operation check and training", "Prueba de funcionamiento y explicación de uso"),
            L("NASFECO España welcome gifts", "Regalos de bienvenida NASFECO España"), L("Two filter cartridges", "Dos cartuchos filtrantes"), L("Follow-up and maintenance reminders", "Seguimiento y recordatorios de mantenimiento")]
     return f'''
@@ -431,7 +436,7 @@ def ch_price():
   <div class="wrap">
     {ch_head("price", L("One final price with VAT: the system plus everything NASFECO does (diagnosis, installation, kit and follow-up).", "Un precio final con IVA: el equipo y todo lo que hace NASFECO (diagnóstico, instalación, kit y seguimiento)."), True)}
     <div class="pr-card rv">
-      <div class="pr-l"><p class="pr-k">Waterdrop {m["name"]} · {L("installed in Madrid", "instalado en Madrid")}</p><div class="pr-amt">{price_html(k)}</div><p class="pr-vat">{L("VAT (21%) and installation included. Nothing is charged on this website.", "IVA (21 %) e instalación incluidos. En esta web no se cobra nada.")}</p>
+      <div class="pr-l"><p class="pr-k">Waterdrop Filter {m["name"]} · {L("installed in Madrid", "instalado en Madrid")}</p><div class="pr-amt">{price_html(k)}</div><p class="pr-vat">{L("VAT (21%) and installation included. Nothing is charged on this website.", "IVA (21 %) e instalación incluidos. En esta web no se cobra nada.")}</p>
         <div class="row">{btn(L("Book your assessment", "Pide tu valoración"), f'data-book="{k}"', "b-wine")}</div></div>
       <div class="pr-r"><p class="pr-k">{L("What the price includes", "Qué incluye el precio")}</p><ul>{"".join(f"<li>{ico(I_CHECK, 15, 2.4)}<span>{x}</span></li>" for x in inc)}</ul>
         <p class="fine">{L("Any extra work (for example, drilling the worktop) is agreed with you beforehand, in writing.", "Cualquier trabajo adicional (por ejemplo, perforar la encimera) se acuerda contigo antes, por escrito.")}</p></div>
@@ -451,10 +456,13 @@ def yt_box(i, label):
 def shorts(inner=False):
     skip = PSHORT[CUR][0] if CUR in PSHORT else None
     c = "".join(f'<article class="short rv">{yt_box(i, L(*t))}<h3>{L(*t)}</h3><small>{by} · YouTube</small></article>' for i, t, by in SHORTS if i != skip)
-    return f'''<div class="sht" id="watch"><div class="sht-h rv"><h3 class="d3">{em(L("See it in [real homes.]", "Míralo en [casas reales.]"))}</h3><p>{L("Shorts by Waterdrop and by owners. With your consent they play on their own, muted.", "Vídeos cortos de Waterdrop y de usuarios, en YouTube. Si aceptas las cookies, se reproducen solos y sin sonido.")}</p></div><div class="sht-l">{c}</div></div>'''
+    return f'''<div class="sht" id="watch"><div class="sht-h rv"><h3 class="d3">{em(L("See it in [real homes.]", "Míralo en [casas reales.]"))}</h3><p>{L("Shorts by Waterdrop Filter and by owners. With your consent they play on their own, muted.", "Vídeos cortos de Waterdrop Filter y de usuarios, en YouTube. Si aceptas las cookies, se reproducen solos y sin sonido.")}</p></div><div class="sht-l">{c}</div></div>'''
 
 def FAQ():
-    return [(("What is the NASFECO diagnosis?", "¿Qué es el diagnóstico NASFECO?"),
+    return [(("Is NASFECO an official Waterdrop Filter distributor?", "¿NASFECO es distribuidor oficial de Waterdrop Filter?"),
+             ("Yes. NASFECO is an official authorized distributor of Waterdrop Filter. The systems we install are original Waterdrop Filter products.",
+              "Sí. NASFECO es distribuidor oficial autorizado de Waterdrop Filter. Los equipos que instalamos son productos originales de Waterdrop Filter.")),
+            (("What is the NASFECO diagnosis?", "¿Qué es el diagnóstico NASFECO?"),
              ("Before installing, we check your kitchen (space, water supply, drain, socket and where the faucet goes) and the water in your home, and tell you in writing what you need. What we measure in the water: {P:qué se mide en el agua y cómo}.",
               "Antes de instalar revisamos tu cocina (espacio, toma de agua, desagüe, enchufe y dónde irá el grifo) y el agua de tu casa, y te decimos por escrito qué necesitas. Qué medimos en el agua: {P:qué se mide en el agua y cómo}.")),
             (("What is included in the price?", "¿Qué incluye el precio?"),
@@ -510,7 +518,7 @@ def closing():
       <h2 class="d1 lt">{em(L("Leave the rest [to us.]", "Déjanos el resto [a nosotros.]"))}</h2>
       <p class="lead lt">{L("Book your assessment and we will plan your installation with you, step by step.", "Pide tu valoración y planificamos contigo la instalación, paso a paso.")}</p>
       <div class="row">{btn(L("Book your assessment", "Pide tu valoración"), "data-book", "b-gold")}<a class="btn b-ghost" href="{wa(L("Hello NASFECO! I would like to know more about the X12 in Madrid.", "¡Hola NASFECO! Quiero saber más del X12 en Madrid."))}" target="_blank" rel="noopener"><span>WhatsApp</span><i>{WA}</i></a></div></div>
-    <div class="arch cta-a rv"><img src="{a(fix_photo("x12"))}" alt="Waterdrop X12" loading="lazy"></div>
+    <div class="arch cta-a rv"><img src="{a(fix_photo("x12"))}" alt="Waterdrop Filter X12" loading="lazy"></div>
   </div>
 </section>'''
 
@@ -523,23 +531,24 @@ def pd_hero(k):
 <section class="pd" id="top" data-h3 data-pdp="{k}">
   <div class="wrap pd-g">
     <div class="pd-v">
-      <div class="arch pd-arch"><div class="mh-3d" data-3d-hero data-k="{k}" data-body="{b}" data-faucet="{f}"><img class="h3-fb" src="{a(fix_photo(k))}" alt="Waterdrop {m["name"]}" fetchpriority="high" width="900" height="900"></div></div>
+      <div class="arch pd-arch"><div class="mh-3d" data-3d-hero data-k="{k}" data-body="{b}" data-faucet="{f}"><img class="h3-fb" src="{a(fix_photo(k))}" alt="Waterdrop Filter {m["name"]}" fetchpriority="high" width="900" height="900"></div></div>
       <p class="mh-hint">{L("Drag to rotate", "Arrastra para girar")}</p>
     </div>
     <div class="pd-c">
-      <p class="crumb"><a href="{page("home")}">{L("Home", "Inicio")}</a> / Waterdrop {m["name"]}</p>
+      <p class="crumb"><a href="{page("home")}">{L("Home", "Inicio")}</a> / Waterdrop Filter {m["name"]}</p>
       {eyebrow(L("Diagnosed, installed and looked after by NASFECO · Madrid", "Diagnosticado, instalado y cuidado por NASFECO · Madrid"))}
-      <h1 class="d1">Waterdrop <em>{m["name"]}</em></h1>
+      {auth_badge()}
+      <h1 class="d1">Waterdrop Filter <em>{m["name"]}</em></h1>
       <div class="chips">{"".join(f"<span>{c}</span>" for c in chips)}</div>
       <p class="lead">{L("Tankless reverse osmosis with remineralization and a smart faucet. Assessed, installed and looked after by NASFECO.", "Ósmosis inversa sin depósito, con remineralización y grifo inteligente. Valorado, instalado y cuidado por NASFECO.")}</p>
       <p class="pd-col">{color_txt(k)}</p>
       <div class="pd-p">{price_html(k)}<span class="pd-vat">{L("VAT (21%) and installation included · everything below included", "IVA (21 %) e instalación incluidos · todo lo de abajo incluido")}</span></div>
-      <div class="row">{btn(L("Book your assessment", "Pide tu valoración"), f'data-book="{k}"', "b-wine")}<a class="btn b-line" href="{wa(L(f"Hello NASFECO! I'm interested in the Waterdrop {m['name']} in Madrid.", f"¡Hola NASFECO! Me interesa el Waterdrop {m['name']} en Madrid."))}" target="_blank" rel="noopener"><span>WhatsApp</span><i>{WA}</i></a></div>
+      <div class="row">{btn(L("Book your assessment", "Pide tu valoración"), f'data-book="{k}"', "b-wine")}<a class="btn b-line" href="{wa(L(f"Hello NASFECO! I'm interested in the Waterdrop Filter {m['name']} in Madrid.", f"¡Hola NASFECO! Me interesa el Waterdrop Filter {m['name']} en Madrid."))}" target="_blank" rel="noopener"><span>WhatsApp</span><i>{WA}</i></a></div>
       <ul class="pd-inc">{"".join(f"<li>{ico(i, 18, 1.6)}<span>{t}</span></li>" for i, t in inc)}</ul>
     </div>
   </div>
 </section>
-<nav class="sub" aria-label="Waterdrop {m["name"]}"><div class="wrap sub-in"><b>{m["name"]}</b><a href="#kit">{L("Welcome kit", "Kit")}</a><a href="#photos">{L("Photos", "Fotos")}</a><a href="#video">{L("Video", "Vídeo")}</a><a href="#features">{L("Overview", "Resumen")}</a><a href="{page("home")}#how">{L("Diagnosis and installation", "Diagnóstico e instalación")}</a><a href="#measure">{L("Will it fit?", "¿Cabe?")}</a><a href="#specs">{L("Specs", "Ficha técnica")}</a><a href="#faq">{L("FAQ", "Preguntas")}</a><button type="button" class="hd-cta" data-book="{k}">{L("Book", "Pedir cita")}</button></div></nav>'''
+<nav class="sub" aria-label="Waterdrop Filter {m["name"]}"><div class="wrap sub-in"><b>{m["name"]}</b><a href="#kit">{L("Welcome kit", "Kit")}</a><a href="#photos">{L("Photos", "Fotos")}</a><a href="#video">{L("Video", "Vídeo")}</a><a href="#features">{L("Overview", "Resumen")}</a><a href="{page("home")}#how">{L("Diagnosis and installation", "Diagnóstico e instalación")}</a><a href="#measure">{L("Will it fit?", "¿Cabe?")}</a><a href="#specs">{L("Specs", "Ficha técnica")}</a><a href="#faq">{L("FAQ", "Preguntas")}</a><button type="button" class="hd-cta" data-book="{k}">{L("Book", "Pedir cita")}</button></div></nav>'''
 
 def gallery(k):
     m = MODELS[k]
@@ -548,9 +557,9 @@ def gallery(k):
     return f'''
 <section class="gal" id="photos">
   <div class="wrap gal-g">
-    <div class="gal-main rv"><img id="pdp-photo" src="{a(fix_photo(k))}" alt="Waterdrop {m["name"]}"></div>
+    <div class="gal-main rv"><img id="pdp-photo" src="{a(fix_photo(k))}" alt="Waterdrop Filter {m["name"]}"></div>
     <div class="gal-ths rv">{th}</div>
-    <p class="fine">{L("Official Waterdrop photos.", "Fotos oficiales de Waterdrop.")}</p>
+    <p class="fine">{L("Official Waterdrop Filter photos.", "Fotos oficiales de Waterdrop Filter.")}</p>
   </div>
 </section>'''
 
@@ -560,7 +569,7 @@ def pshort(k):
     return f'''
 <section class="psh" id="video">
   <div class="wrap psh-g">
-    <article class="short rv">{yt_box(i, "Waterdrop " + m["name"])}<small>{by} · YouTube</small></article>
+    <article class="short rv">{yt_box(i, "Waterdrop Filter " + m["name"])}<small>{by} · YouTube</small></article>
     <div class="rv">{eyebrow(L("Watch it", "Míralo"))}
       <h2 class="d2">{em(L(f"The {m['name']}, [in a minute.]", f"El {m['name']}, [en un minuto.]"))}</h2>
       <p class="lead">{L("A short from a real home, so you can see the system working before your assessment.", "Un vídeo corto grabado en una casa real, para que veas el equipo funcionando antes de tu valoración.")}</p>
@@ -581,7 +590,7 @@ def features(k):
 <section class="feat" id="features"><div class="wrap">
   <header class="sh rv">{eyebrow(L("What it does", "Lo que hace"))}<h2 class="d2">{em(L(f"Everything the {MODELS[k]['name']} does, [without asking.]", f"Todo lo que hace el {MODELS[k]['name']}, [sin pedirte nada.]"))}</h2></header>
   <div class="feat-g">{c}</div>
-  <p class="fine">{L("Official Waterdrop clips.", "Vídeos oficiales de Waterdrop.")}</p></div></section>'''
+  <p class="fine">{L("Official Waterdrop Filter clips.", "Vídeos oficiales de Waterdrop Filter.")}</p></div></section>'''
 
 def install3d(k="x12"):
     fb, ff = FIX[k]
@@ -626,7 +635,7 @@ def measure_grid(k="x12"):
       <div class="ms-side">
         <div class="ms-card"><p class="eb"><i></i>{L("Official size", "Medidas oficiales")}</p>
           <div class="spec"><span>{L("Width", "Ancho")}</span><b data-dim="w"></b><span>{L("Depth", "Fondo")}</span><b data-dim="d"></b><span>{L("Height", "Alto")}</span><b data-dim="h"></b><span>{L("Weight", "Peso")}</span><b data-dim="kg"></b></div>
-          <p class="fine">{L("Waterdrop's European product sheet.", "Ficha europea de Waterdrop.")}</p></div>
+          <p class="fine">{L("Waterdrop Filter's European product sheet.", "Ficha europea de Waterdrop Filter.")}</p></div>
         <div class="ms-card"><h3>{L("Your cabinet", "Tu mueble")}</h3><p class="fine">{L("Measure the free space inside, under the sink.", "Mide el espacio libre por dentro, bajo el fregadero.")}</p>
           <div class="fit-f"><label><span>{L("Width", "Ancho")} (cm)</span><input data-cab="w" type="number" inputmode="decimal" min="0" step="0.1"></label><label><span>{L("Depth", "Fondo")} (cm)</span><input data-cab="d" type="number" inputmode="decimal" min="0" step="0.1"></label><label><span>{L("Height", "Alto")} (cm)</span><input data-cab="h" type="number" inputmode="decimal" min="0" step="0.1"></label></div>
           <div class="fit-r" data-fit aria-live="polite"></div>
@@ -636,13 +645,13 @@ def measure_grid(k="x12"):
 
 def specs(k):
     m = MODELS[k]
-    rows = [(L("Model", "Modelo"), "Waterdrop " + m["name"]),
+    rows = [(L("Model", "Modelo"), "Waterdrop Filter " + m["name"]),
             (L("Rated capacity", "Capacidad nominal"), cap(k) + f' <small>({L("European sheet", "ficha europea")}: {num(m["gpd"])} GPD)</small>'),
             (L("Pure / drain", "Pura / desagüe"), "3:1"),
             (L("Technology", "Tecnología"), L("Tankless reverse osmosis + alkaline remineralization", "Ósmosis inversa sin depósito + remineralización alcalina")),
             (L("Faucet", "Grifo"), L("Smart: TDS, filter life, adjustable volume", "Inteligente: TDS, vida de los filtros, volumen programable")),
             (L("Filters", "Filtros"), L("F1A · 12 months, F2 · 6 months, F3 · 24 months (depending on use)", "F1A · 12 meses, F2 · 6 meses, F3 · 24 meses (según uso)")),
-            (L("Certification", "Certificación"), L("NSF/ANSI 42, 58 and 372 (Waterdrop European sheet)", "NSF/ANSI 42, 58 y 372 (ficha europea de Waterdrop)") + " · " + pend(L("CE marking", "marcado CE"))),
+            (L("Certification", "Certificación"), L("NSF/ANSI 42, 58 and 372 (Waterdrop Filter European sheet)", "NSF/ANSI 42, 58 y 372 (ficha europea de Waterdrop Filter)") + " · " + pend(L("CE marking", "marcado CE"))),
             (L("Size", "Medidas"), dims_txt()), (L("Weight", "Peso"), num(KG, 1) + " kg"),
             (L("Power", "Electricidad"), L("Socket under the sink", "Enchufe bajo el fregadero") + " · " + pend(L("confirm EU 230 V version and plug", "confirmar versión europea 230 V y enchufe"))),
             (L("Colour", "Color"), color_txt(k))]
@@ -679,7 +688,7 @@ def dialogs():
     return f'''
 <dialog class="dlg dlg-book" id="d-book" aria-labelledby="bk-title">{x()}
   <aside class="bk-side"><img class="bk-logo" src="{a("assets/brand/nasfeco-es-white.png")}" alt="NASFECO España" width="150" height="36"><h3>{em(L("Your home. Your details. [Your assessment.]", "Tu casa. Tus detalles. [Tu valoración.]"))}</h3>
-    <div class="bk-sum"><img id="bk-img" src="{a("assets/products/x12-silver.webp")}" alt=""><div><b id="bk-model">Waterdrop X12</b><span id="bk-price">{price_now("x12", False)}</span><small>{L("VAT, standard installation and welcome kit included.", "IVA, instalación estándar y kit de bienvenida incluidos.")}</small></div></div></aside>
+    <div class="bk-sum"><img id="bk-img" src="{a("assets/products/x12-silver.webp")}" alt=""><div><b id="bk-model">Waterdrop Filter X12</b><span id="bk-price">{price_now("x12", False)}</span><small>{L("VAT, standard installation and welcome kit included.", "IVA, instalación estándar y kit de bienvenida incluidos.")}</small></div></div></aside>
   <div class="bk-main"><div class="bk-prog"><span class="on"></span><span></span><span></span><b id="bk-step">01 / 03</b></div>
     <h2 class="d3" id="bk-title"></h2><p class="bk-sub" id="bk-sub"></p>
     <form id="bk-form" novalidate><div id="bk-fields"></div><p class="bk-err" id="bk-err" role="alert"></p>
@@ -711,8 +720,8 @@ def LEGAL():
     return {
      "legal": (L("Legal notice", "Aviso legal"), L("Legal notice of NASFECO España, under Spanish Law 34/2002 (LSSI-CE).", "Aviso legal de NASFECO España conforme a la Ley 34/2002 (LSSI-CE)."), [
         (L("Website owner", "Titular de la web"), f'<ul><li>{L("Company name", "Razón social")}: {T["name"]}</li><li>NIF/CIF: {T["nif"]}</li><li>{L("Registered address", "Domicilio")}: {T["address"]}</li><li>{L("Registration", "Inscripción registral")}: {T["registry"]}</li><li>{L("Email", "Correo")}: {T["email"]}</li><li>WhatsApp: {WA_SHOW or pend("WhatsApp +34")}</li></ul>'),
-        (L("Purpose", "Objeto"), L("<p>This website presents the NASFECO service in Madrid: assessment, installation, welcome kit and follow-up for the Waterdrop reverse osmosis system. No purchases or payments are made on this website.</p>", "<p>Esta web presenta el servicio de NASFECO en Madrid: valoración, instalación, kit de bienvenida y seguimiento del sistema de ósmosis inversa Waterdrop. En esta web no se compra ni se paga nada.</p>")),
-        (L("Intellectual property", "Propiedad intelectual e industrial"), L("<p>The NASFECO brand, logo and the content of this website belong to the owner. Waterdrop is a registered trademark of its manufacturer; product photos and clips are official Waterdrop material. The 3D models, the kit and team images are illustrative.</p>", "<p>La marca y el logotipo NASFECO y los contenidos de esta web pertenecen a su titular. Waterdrop es una marca registrada de su fabricante; las fotos y vídeos del producto son material oficial de Waterdrop. Los modelos 3D y las imágenes del kit y del equipo son ilustrativos.</p>")),
+        (L("Purpose", "Objeto"), L("<p>This website presents the NASFECO service in Madrid: assessment, installation, welcome kit and follow-up for the Waterdrop Filter reverse osmosis system. No purchases or payments are made on this website.</p>", "<p>Esta web presenta el servicio de NASFECO en Madrid: valoración, instalación, kit de bienvenida y seguimiento del sistema de ósmosis inversa Waterdrop Filter. En esta web no se compra ni se paga nada.</p>")),
+        (L("Intellectual property", "Propiedad intelectual e industrial"), L("<p>The NASFECO brand, logo and the content of this website belong to the owner. Waterdrop Filter is a registered trademark of its manufacturer; product photos and clips are official Waterdrop Filter material. The 3D models, the kit and team images are illustrative.</p>", "<p>La marca y el logotipo NASFECO y los contenidos de esta web pertenecen a su titular. Waterdrop Filter es una marca registrada de su fabricante; las fotos y vídeos del producto son material oficial de Waterdrop Filter. Los modelos 3D y las imágenes del kit y del equipo son ilustrativos.</p>")),
         (L("Liability", "Responsabilidad"), L("<p>We try to keep the information accurate and up to date. Final prices, scope and conditions are those stated in your written proposal.</p>", "<p>Procuramos que la información sea correcta y esté actualizada. El precio, el alcance y las condiciones finales son los que figuran en tu propuesta por escrito.</p>")),
         (L("Law and jurisdiction", "Ley aplicable"), L("<p>Spanish law applies. If you are a consumer, you may go to the courts of your place of residence.</p>", "<p>Se aplica la legislación española. Si eres consumidor, puedes acudir a los tribunales de tu domicilio.</p>"))]),
      "privacy": (L("Privacy policy", "Política de privacidad"), L("How NASFECO España processes your personal data (GDPR and Spanish Organic Law 3/2018).", "Cómo trata NASFECO España tus datos personales (RGPD y LOPDGDD)."), [
@@ -731,8 +740,8 @@ def LEGAL():
         (L("Change your choice", "Cambiar tu elección"), L('<p>You can accept or reject at any time: <button type="button" class="ul" data-cookie-settings>open cookie settings</button>. You can also delete the stored data from your browser settings.</p>', '<p>Puedes aceptar o rechazar cuando quieras: <button type="button" class="ul" data-cookie-settings>abrir la configuración de cookies</button>. También puedes borrar los datos guardados desde la configuración de tu navegador.</p>'))]),
      "terms": (L("Terms of sale", "Condiciones de contratación"), L("Conditions of the NASFECO service in Madrid: price, withdrawal, guarantee and complaints.", "Condiciones del servicio NASFECO en Madrid: precio, desistimiento, garantía y reclamaciones."), [
         (L("Provider", "Prestador"), f'<p>{T["name"]} · NIF/CIF {T["nif"]} · {T["address"]} · {T["email"]}</p>'),
-        (L("What you hire", "Qué contratas"), L("<p>The Waterdrop system with its original faucet, the kitchen assessment, the standard installation, the welcome kit and the follow-up. The exact scope, any extra work and the date are confirmed in a written proposal before installing.</p>", "<p>El equipo Waterdrop con su grifo original, la valoración de tu cocina, la instalación estándar, el kit de bienvenida y el seguimiento. El alcance exacto, cualquier trabajo adicional y la fecha se confirman en una propuesta por escrito antes de instalar.</p>")),
-        (L("Price and payment", "Precio y pago"), L("<p>Waterdrop X12: " + offer_txt() + ". Prices are final and include VAT (21%). Payment methods and timing: {P:formas y momento de pago}. You receive an invoice. Nothing is charged on this website.</p>", "<p>Waterdrop X12: " + offer_txt() + ". Los precios son finales e incluyen el IVA (21 %). Formas y momento de pago: {P:formas y momento de pago}. Recibes factura. En esta web no se cobra nada.</p>")),
+        (L("What you hire", "Qué contratas"), L("<p>The Waterdrop Filter system with its original faucet, the kitchen assessment, the standard installation, the welcome kit and the follow-up. The exact scope, any extra work and the date are confirmed in a written proposal before installing.</p>", "<p>El equipo Waterdrop Filter con su grifo original, la valoración de tu cocina, la instalación estándar, el kit de bienvenida y el seguimiento. El alcance exacto, cualquier trabajo adicional y la fecha se confirman en una propuesta por escrito antes de instalar.</p>")),
+        (L("Price and payment", "Precio y pago"), L("<p>Waterdrop Filter X12: " + offer_txt() + ". Prices are final and include VAT (21%). Payment methods and timing: {P:formas y momento de pago}. You receive an invoice. Nothing is charged on this website.</p>", "<p>Waterdrop Filter X12: " + offer_txt() + ". Los precios son finales e incluyen el IVA (21 %). Formas y momento de pago: {P:formas y momento de pago}. Recibes factura. En esta web no se cobra nada.</p>")),
         (L("Service area", "Zona de servicio"), f'<p>{ZONE or pend("zona de servicio y códigos postales")}</p>'),
         (L("Right of withdrawal (14 days)", "Derecho de desistimiento (14 días)"), L("<p>If you sign the contract at a distance or away from our premises, you can withdraw within 14 calendar days without giving reasons, by any clear statement (for example, an email). For the goods, the period counts from the day you receive them; for the service, from the day the contract is signed. If you expressly ask us to install within the 14 days, you will pay the proportional part of the service already provided; once the installation has been fully carried out with your express consent and your acknowledgement, you lose the right of withdrawal for the service. If you withdraw from the goods, you are only responsible for any loss in value caused by handling them beyond what is necessary to check them. We refund what you paid within 14 days of being informed. {P:formulario de desistimiento y quién paga la retirada del equipo}</p>",
                                                                                         "<p>Si contratas a distancia o fuera de nuestro establecimiento, puedes desistir en 14 días naturales sin dar explicaciones, con cualquier declaración clara (por ejemplo, un correo). Para el equipo, el plazo cuenta desde el día en que lo recibes; para el servicio, desde que firmas el contrato. Si nos pides de forma expresa instalar dentro de esos 14 días, pagas la parte proporcional del servicio ya prestado; cuando la instalación se ha hecho por completo con tu consentimiento expreso y tu reconocimiento, pierdes el derecho de desistimiento sobre el servicio. Si desistes del equipo, solo respondes de la pérdida de valor por manipularlo más de lo necesario para comprobarlo. Te devolvemos lo pagado en 14 días desde que nos lo comunicas. {P:formulario de desistimiento y quién paga la retirada del equipo}</p>")),
@@ -753,17 +762,17 @@ def page_legal(key):
 
 # ------------------------------------------------------------------ páginas
 def page_home():
-    t = L("Reverse Osmosis with Installation in Madrid | Waterdrop · NASFECO", "Ósmosis inversa con instalación en Madrid | Waterdrop · NASFECO")
-    d = L("Waterdrop X12 tankless reverse osmosis system, installed in your Madrid kitchen by NASFECO. Assessment, VAT and welcome kit included.",
-          "Ósmosis inversa Waterdrop X12 instalada en tu cocina de Madrid por NASFECO. Valoración, IVA y kit de bienvenida incluidos.")
+    t = L("Reverse Osmosis with Installation in Madrid | Waterdrop Filter · NASFECO", "Ósmosis inversa con instalación en Madrid | Waterdrop Filter · NASFECO")
+    d = L("Waterdrop Filter X12 tankless reverse osmosis system, installed in your Madrid kitchen by NASFECO. Assessment, VAT and welcome kit included.",
+          "Ósmosis inversa Waterdrop Filter X12 instalada en tu cocina de Madrid por NASFECO. Valoración, IVA y kit de bienvenida incluidos.")
     return (head(t, d) + header() + rail() + '<main id="main">' + hero() + systems() + ch_why() + kit_photo() + ch_how() + team() + ch_measure() + ch_price() + faq() + closing()
             + "</main>" + footer() + dialogs())
 
 def page_product(k):
     m = MODELS[k]
-    t = L(f"Waterdrop {m['name']} Reverse Osmosis, Installed in Madrid | NASFECO", f"Waterdrop {m['name']}: ósmosis inversa instalada en Madrid | NASFECO")
-    d = L(f"Waterdrop {m['name']} tankless reverse osmosis installed in Madrid by NASFECO. VAT, installation and welcome kit included. See it in 3D.",
-          f"Waterdrop {m['name']}, ósmosis inversa sin depósito, instalado en Madrid por NASFECO. IVA, instalación y kit de bienvenida incluidos. Míralo en 3D.")
+    t = L(f"Waterdrop Filter {m['name']} Reverse Osmosis, Installed in Madrid | NASFECO", f"Waterdrop Filter {m['name']}: ósmosis inversa instalada en Madrid | NASFECO")
+    d = L(f"Waterdrop Filter {m['name']} tankless reverse osmosis installed in Madrid by NASFECO. VAT, installation and welcome kit included. See it in 3D.",
+          f"Waterdrop Filter {m['name']}, ósmosis inversa sin depósito, instalado en Madrid por NASFECO. IVA, instalación y kit de bienvenida incluidos. Míralo en 3D.")
     return (head(t, d) + header() + '<main id="main">' + pd_hero(k) + kit3d() + gallery(k) + features(k) + pshort(k) + measure(k) + specs(k) + team(True) + faq() + closing()
             + "</main>" + footer() + dialogs())
 
@@ -772,8 +781,8 @@ def page_soon(k):
     to = page("home") + "#systems"
     return f'''<!doctype html>
 <html lang="{L("en", "es-ES")}"><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta http-equiv="refresh" content="0; url={to}">
-<title>Waterdrop {MODELS[k]["name"]} · {L("Coming soon", "Próximamente")} | NASFECO</title><link rel="canonical" href="{url_("home")}"></head>
-<body style="background:#F7F1E7;color:#2B1A1C;font-family:system-ui,sans-serif"><p><a href="{to}" style="color:#6B0F1A">Waterdrop {MODELS[k]["name"]} · {L("Coming soon", "Próximamente")}</a></p></body></html>'''
+<title>Waterdrop Filter {MODELS[k]["name"]} · {L("Coming soon", "Próximamente")} | NASFECO</title><link rel="canonical" href="{url_("home")}"></head>
+<body style="background:#F7F1E7;color:#2B1A1C;font-family:system-ui,sans-serif"><p><a href="{to}" style="color:#6B0F1A">Waterdrop Filter {MODELS[k]["name"]} · {L("Coming soon", "Próximamente")}</a></p></body></html>'''
 
 def sitemap():
     keys = ["home"] + LIVE() + ["legal", "privacy", "cookies", "terms"]

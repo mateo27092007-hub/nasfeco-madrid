@@ -119,7 +119,7 @@ export function createInstall(el, opts = {}) {
   const ES = document.documentElement.lang.startsWith('es'), tx = (es, en) => ES ? es : en;
   const pins = {
     space: S.tag(tx('Espacio', 'Space')), water: S.tag(tx('Agua', 'Water')), drain: S.tag(tx('Desagüe', 'Drain')), power: S.tag(tx('Enchufe', 'Socket')),
-    unit: S.tag('Waterdrop ' + (opts.model === 'x16' ? 'X16' : 'X12'), 'dk'), faucet: S.tag(tx('Grifo inteligente', 'Smart faucet'), 'dk'),
+    unit: S.tag('Waterdrop Filter ' + (opts.model === 'x16' ? 'X16' : 'X12'), 'dk'), faucet: S.tag(tx('Grifo inteligente', 'Smart faucet'), 'dk'),
     ready: S.tag(tx('Agua lista ✓', 'Water ready ✓'), 'gd'), nf: S.tag(tx('Instalado por NASFECO', 'Installed by NASFECO'), 'gd')
   };
   pins.space.p.set(0, .45, CD / 2); pins.water.p.set(.15, 2.2, -CD / 2 + .2); pins.drain.p.set(SX, 1.45, -.2); pins.power.p.set(CW / 2 - .15, 1.75, -.35);
